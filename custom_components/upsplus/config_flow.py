@@ -22,7 +22,9 @@ class CustomConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         if user_input is not None:
             self.data = {
                     "enable_automatic_shutdown": user_input.get("enable_automatic_shutdown",True),
-                    "automatic_shutdown_voltage": user_input.get("automatic_shutdown_voltage",3700)
+                    "automatic_shutdown_voltage": user_input.get("automatic_shutdown_voltage",3700),
+#                    "battery_voltage_full": user_input.get("battery_voltage_full",4200),
+#                    "battery_voltage_empty": user_input.get("battery_voltage_empty",3200)
                 }
             if user_input.get("advanced", False):
                 return await self.async_step_advanced()
@@ -30,7 +32,9 @@ class CustomConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         data_schema = {
             vol.Required("enable_automatic_shutdown", default=True): bool,
             vol.Required("automatic_shutdown_voltage", default=3700): int,
-            vol.Optional("advanced", default=False): bool,
+#            vol.Required("battery_voltage_full", default=4200): int,
+#            vol.Required("battery_voltage_empty", default=3200): int,
+            vol.Optional("advanced", default=False): bool
         }
         return self.async_show_form(
             step_id="user", data_schema=vol.Schema(data_schema), errors=errors
@@ -47,8 +51,10 @@ class CustomConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             else:
                 errors["base"] = error
         data_schema = {
-            vol.Required("sampling_time", default=read_buff(bus,21,22)): int,
-            vol.Required("protection_voltage", default=read_buff(bus,17,18)): int
+            vol.Required("sampling_time", default=read_buff(bus,0x15,0x16)): int,
+            vol.Required("protection_voltage", default=read_buff(bus,0x11,0x12)): int,
+#            vol.Required("battery_voltage_full", default=read_buff(bus,0x0D,0x0E)): int,
+#            vol.Required("battery_voltage_empty", default=read_buff(bus,0x0F,0x10)): int
         }
         return self.async_show_form(
             step_id="advanced", data_schema=vol.Schema(data_schema), errors=errors
@@ -78,7 +84,9 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
             if not error:
                 data = {
                     "enable_automatic_shutdown": user_input.get("enable_automatic_shutdown",True),
-                    "automatic_shutdown_voltage": user_input.get("automatic_shutdown_voltage",3700)
+                    "automatic_shutdown_voltage": user_input.get("automatic_shutdown_voltage",3700),
+#                    "battery_voltage_full": user_input.get("battery_voltage_full",4200),
+ #                   "battery_voltage_empty": user_input.get("battery_voltage_empty",3200),
                 }
                 return self.async_create_entry(title="UPS I2C", data={"upsplus":data})
             else:
@@ -93,8 +101,10 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
         data_schema = {
             vol.Required("enable_automatic_shutdown", default=curr_enable_automatic_shutdown): bool,
             vol.Required("automatic_shutdown_voltage", default=curr_automatic_shutdown): int,
-            vol.Required("sampling_time", default=read_buff(bus,21,22)): int,
-            vol.Required("protection_voltage", default=read_buff(bus,17,18)): int
+            vol.Required("sampling_time", default=read_buff(bus,0x15,0x16)): int,
+            vol.Required("protection_voltage", default=read_buff(bus,0x11,0x12)): int,
+            #vol.Required("battery_voltage_full", default=read_buff(bus,0x0D,0x0E)): int,
+            #vol.Required("battery_voltage_empty", default=read_buff(bus,0x0F,0x10)): int
         }
         return self.async_show_form(
             step_id="init", data_schema=vol.Schema(data_schema), errors=errors
@@ -104,14 +114,28 @@ def config_ups(bus, user_input: Dict[str, Any] = None) -> str:
     """Set current options from userinput"""
     sampling_time = user_input.get("sampling_time",2)
     if 1 <= sampling_time <= 10:
-        bus.write_byte_data(DEVICE_ADDR, 21, sampling_time & 0xFF)
-        bus.write_byte_data(DEVICE_ADDR, 22, (sampling_time >> 8)& 0xFF)
+        bus.write_byte_data(DEVICE_ADDR, 0x15, sampling_time & 0xFF)
+        bus.write_byte_data(DEVICE_ADDR, 0x16, (sampling_time >> 8)& 0xFF)
     else:
         return "invalid_sampling_time"
+    battery_voltage_empty = 3200#user_input.get("battery_voltage_empty",3200)
+    battery_voltage_full = 4200#user_input.get("battery_voltage_full",4200)
     protection_voltage = user_input.get("protection_voltage",3700)
-    if 3700 <= protection_voltage <= 4100:
-        bus.write_byte_data(DEVICE_ADDR, 17, protection_voltage & 0xFF)
-        bus.write_byte_data(DEVICE_ADDR, 18, (protection_voltage >> 8)& 0xFF)
+    if 2500 <= battery_voltage_empty <= protection_voltage:
+        bus.write_byte_data(DEVICE_ADDR, 0x0F, battery_voltage_empty & 0xFF)
+        bus.write_byte_data(DEVICE_ADDR, 0x10, (battery_voltage_empty >> 8)& 0xFF)
+#    else
+#        return "invalid_empty_voltage"
+    if protection_voltage <= battery_voltage_full <= 4500:
+        bus.write_byte_data(DEVICE_ADDR, 0x0D, battery_voltage_full & 0xFF)
+        bus.write_byte_data(DEVICE_ADDR, 0x0E, (battery_voltage_full >> 8)& 0xFF)
+#    else
+#        return "invalid_full_voltage"
+    if battery_voltage_empty <= protection_voltage <= battery_voltage_full:
+        bus.write_byte_data(DEVICE_ADDR, 0x11, protection_voltage & 0xFF)
+        bus.write_byte_data(DEVICE_ADDR, 0x22, (protection_voltage >> 8)& 0xFF)
     else:
         return "invalid_protection_voltage"
     return ""
+
+

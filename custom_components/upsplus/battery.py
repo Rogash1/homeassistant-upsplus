@@ -20,7 +20,8 @@ class UPSManager:
         self.ina_battery = INA219(0.005, busnum=DEVICE_BUS, address=0x45)
         self.ina_battery.configure()
         self.bus = smbus2.SMBus(DEVICE_BUS)
-        self.sw_version = read_buff(self.bus,40,41)
+        self.sw_version = read_buff(self.bus,0x28,0x29)
+        self.serial_number = read_buff(self.bus,0xF0,0xF1,0xF2,0xF3,0xF4,0xF5,0xF6,0xF7,0XF8,0xF9,0xFA,0xFB)
 
 def read_buff(bus, index1, *args):
     """Function to read the SMBus and add all specified indexes"""

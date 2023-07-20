@@ -9,26 +9,26 @@ BUTTONS = [
     {
         "name": "Cancel shutdown",
         "entry_id": "cancel_shutdown",
-        "address": 24,
-        "value": 0
+        "address": 0x18,
+        "value": 0x00
     },
     {
         "name": "Cancel restart",
         "entry_id": "cancel_restart",
-        "address": 26,
-        "value": 0
+        "address": 0x1A,
+        "value": 0x00
     },
     {
         "name": "Restore factory settings",
         "entry_id": "restore_factory_settings",
-        "address": 27,
-        "value": 1
+        "address": 0x1B,
+        "value": 0x01
     },
     {
         "name": "Enter OTA",
         "entry_id": "enter_ota",
-        "address": 50,
-        "value": 127
+        "address": 0x32,
+        "value": 0x7F
     },
 ]
 
@@ -80,101 +80,103 @@ SENSOR_LIST = {
     }
 }
 
+# The registermap of the UPS can be found in the product wiki
+# https://wiki.52pi.com/index.php?title=EP-0136#Register_Mapping
 SENSOR_LIST_SMBUS = {
     "processor_voltage": {
         "name": "UPS processor voltage",
         "unit_of_measurement": "V",
         "class": "voltage",
-        "index": [1,2]
+        "index": [0x01,0x02]
     },
     "pi_report_voltage": {
         "name": "UPS pi report voltage",
         "unit_of_measurement": "V",
         "class": "voltage",
-        "index": [3,4]
+        "index": [0x03,0x04]
     },
     "input_report_voltage": {
         "name": "UPS input report voltage",
         "unit_of_measurement": "V",
         "class": "voltage",
-        "index": [5,6]
+        "index": [0x05,0x06]
     },
     "type_c_voltage": {
         "name": "UPS Type C voltage",
         "unit_of_measurement": "V",
         "class": "voltage",
-        "index": [7,8]
+        "index": [0x07,0x08]
     },
     "micro_usb_voltage": {
         "name": "UPS Micro USB voltage",
         "unit_of_measurement": "V",
         "class": "voltage",
-        "index": [9,10]
+        "index": [0x09,0x0A]
     },
     "battery_temperature": {
         "name": "UPS battery temperature",
         "unit_of_measurement": "°C",
         "class": "temperature",
-        "index": [11,12]
+        "index": [0x0B,0x0C]
     },
     "battery_full_voltage": {
         "name": "UPS battery full voltage",
         "unit_of_measurement": "V",
         "class": "voltage",
-        "index": [13,14]
+        "index": [0x0D,0x0E]
     },
     "battery_empty_voltage": {
         "name": "UPS battery empty voltage",
         "unit_of_measurement": "V",
         "class": "voltage",
-        "index": [15,16]
+        "index": [0x0F,0x10]
     },
     "battery_protection_voltage": {
         "name": "UPS battery protection voltage",
         "unit_of_measurement": "V",
         "class": "voltage",
-        "index": [17,18]
+        "index": [0x11,0x12]
     },
     "battery_capacity": {
         "name": "UPS battery capacity",
         "unit_of_measurement": "%",
         "class": "battery",
-        "index": [19,20]
+        "index": [0x13,0x14]
     },
     "sampling_period": {
         "name": "UPS sampling period",
         "unit_of_measurement": "min",
         "class": "duration",
-        "index": [21,22]
+        "index": [0x15,0x16]
     },
     "shutdown_timer": {
         "name": "UPS shutdown countdown",
         "unit_of_measurement": "s",
         "class": "duration",
-        "index": [24]
+        "index": [0x18]
     },
     "restart_timer": {
         "name": "UPS restart countdown",
         "unit_of_measurement": "s",
         "class": "duration",
-        "index": [26]
+        "index": [0x1A]
     },
     "all_running_time": {
         "name": "UPS accumulated running time",
         "unit_of_measurement": "s",
         "class": "duration",
-        "index": [28,29,30,31]
+        "index": [0x1C,0x1D,0x1E,0x1F]
     },
     "all_charged_time": {
         "name": "UPS accumulated charged time",
         "unit_of_measurement": "s",
         "class": "duration",
-        "index": [32,33,34,35]
+        "index": [0x20,0x21,0x22,0x23]
     },
     "running_time": {
         "name": "UPS running time",
         "unit_of_measurement": "s",
         "class": "duration",
-        "index": [36,37,38,39]
+        "index": [0x24,0x25,0x26,0x27]
     }
 }

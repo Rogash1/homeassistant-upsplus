@@ -6,11 +6,12 @@ from .battery import UPSManager
 def device_info():
     """Generate all device information"""
     return {
-        "identifiers": {(DOMAIN, UPS_ID)},
+        "identifiers": {(DOMAIN, str(UPSManager().serial_number))},
         "name": "UPS",
         "manufacturer": "52PI",
-        "model": "52Pi 18650 UPS",
+        "model": "EP-0136 - 18650 UPS",
         "sw_version": UPSManager().sw_version,
+        #"hw_version": UPSManager().serial_number,
     }
 
 class UPSDevice(Entity):

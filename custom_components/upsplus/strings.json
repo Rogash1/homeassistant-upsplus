@@ -6,7 +6,9 @@
         },
     "error": {
       "invalid_sampling_time": "Number is not between 1 and 10",
-      "invalid_protection_voltage": "Number is not between 3700 and 4100"
+      "invalid_protection_voltage": "Number is not between battery empty voltage and battery full voltage",
+      "invalid_empty_voltage": "Number is not between 2500mv and battery protection voltage",
+      "invalid_full_voltage": "Number is not between protection voltage and 4500mv"
     },
     "step": {
       "user": {
@@ -14,7 +16,9 @@
         "data": {
           "enable_automatic_shutdown": "(Comming...) Shutdown when voltage is to low",
           "automatic_shutdown_voltage": "(Comming...) Set voltage for shutdown",
-          "advanced": "Enter advanced setup"
+          "advanced": "Enter advanced setup",
+          "battery_voltage_full": "a",
+          "battery_voltage_empty": "b"
         },
         "description": "Set batteryoptions for UPS"
       },
@@ -22,7 +26,9 @@
         "title": "Options for UPS",
         "data": {
           "sampling_time": "Sampling time in minutes",
-          "protection_voltage": "(3700-4100) Set voltage for shutdown"
+          "protection_voltage": "(3700-4100) Set voltage for shutdown",
+          "battery_voltage_full": "c",
+          "battery_voltage_empty": "d"
         },
         "description": "Set batteryoptions for UPS"
       }
@@ -31,7 +37,9 @@
  "options": {
     "error": {
       "invalid_sampling_time": "Number is not between 1 and 10",
-      "invalid_protection_voltage": "Number is not between 3700 and 4100"
+      "invalid_protection_voltage": "Number is not between battery empty voltage and battery full voltage",
+      "invalid_empty_voltage": "Number is not between 2500mv and battery protection voltage",
+      "invalid_full_voltage": "Number is not between protection voltage and 4500mv"
     },
     "step": {
       "init": {
@@ -40,7 +48,9 @@
           "enable_automatic_shutdown": "(Comming...) Shutdown when voltage is to low",
           "automatic_shutdown_voltage": "(Comming...) Set voltage for shutdown",
           "sampling_time": "Sampling time in minutes",
-          "protection_voltage": "(3700-4100) Set voltage for shutdown"
+          "protection_voltage": "(3700-4100) Set voltage for shutdown",
+          "battery_voltage_full": "e",
+          "battery_voltage_empty": "f"
         },
         "description": "Set batteryoptions for UPS"
       }
